@@ -1,32 +1,52 @@
 package com.aselsan.com.aselsan.service
-
+import com.aselsan.com.aselsan.domain.campaign.Campaign
+import com.aselsan.com.aselsan.domain.campaign.DateBasedDiscountCampaign
+import com.aselsan.com.aselsan.domain.campaign.FixedAmountDiscountCampaign
 import com.aselsan.com.aselsan.domain.campaign.PercentageDiscountCampaign
 import com.aselsan.com.aselsan.repository.ShoppingRepository
 import com.aselsan.domain.model.CampaignRequest
 import com.aselsan.domain.product.ProductCategoryType
+import com.aselsan.domain.model.CampaignResponse
+import java.time.DayOfWeek
 
 class ShoppingService(private val shoppingRepository: ShoppingRepository) {
 
-    fun applyDiscount(request: CampaignRequest): String {
-
-        val shoppingCart = shoppingRepository.getShoppingCart(request)
-        val campaign = PercentageDiscountCampaign(
+    private val campaigns: List<Campaign> = listOf(
+        PercentageDiscountCampaign(
             eligibleCategories = mapOf(
                 ProductCategoryType.ELECTRONICS to 0.1,
                 ProductCategoryType.CLOTHING to 0.15
+            )
+        ),
+        FixedAmountDiscountCampaign(
+            eligibleCategories = setOf(ProductCategoryType.ELECTRONICS, ProductCategoryType.CLOTHING),
+            minCartValue = 500.0,
+            discountAmount = 100.0
+        ),
+        DateBasedDiscountCampaign(
+            promotions = mapOf(
+                DayOfWeek.MONDAY to DateBasedDiscountCampaign.Promotion(ProductCategoryType.BOOKS, 0.1),
+                DayOfWeek.TUESDAY to DateBasedDiscountCampaign.Promotion(ProductCategoryType.ELECTRONICS, 0.05),
+                DayOfWeek.WEDNESDAY to DateBasedDiscountCampaign.Promotion(ProductCategoryType.TOYS, 0.1),
+                DayOfWeek.THURSDAY to DateBasedDiscountCampaign.Promotion(ProductCategoryType.CLOTHING, 0.05),
             ),
-            minCartValue = 2500.0
+            sampleDay = DayOfWeek.MONDAY
         )
+    )
 
+    fun applyDiscount(request: CampaignRequest): List<CampaignResponse> {
+        val shoppingCart = shoppingRepository.getShoppingCart(request)
 
-        return if (campaign.isApplicable(shoppingCart)) {
-
-            val discountAmount = campaign.calculateDiscount(shoppingCart)
-            "Discount applied: $discountAmount"
-        } else {
-            "Campaign not applicable"
+        val campaignResults = campaigns.map { campaign ->
+            if (campaign.isApplicable(shoppingCart)) {
+                val discount = campaign.calculateDiscount(shoppingCart)
+                CampaignResponse(campaign.name, discount)
+            } else {
+                CampaignResponse(campaign.name, 0.0)
+            }
         }
 
+        return campaignResults.sortedByDescending { it.discount }
     }
 
 }

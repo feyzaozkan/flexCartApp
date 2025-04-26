@@ -14,9 +14,3 @@ data class CustomerResponseDto(
     val lastYearSpent: Double,
     val type: CustomerType
 )
-
-
-/*
-
-
-*/

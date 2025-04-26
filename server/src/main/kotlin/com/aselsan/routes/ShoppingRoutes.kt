@@ -1,6 +1,7 @@
 package com.aselsan.routes
 import com.aselsan.com.aselsan.service.ShoppingService
 import com.aselsan.domain.model.CampaignRequest
+import com.aselsan.domain.model.CampaignResponse
 
 
 import io.ktor.http.HttpStatusCode
@@ -16,10 +17,9 @@ fun Route.shoppingRoutes(shoppingService: ShoppingService) {
     route("/shopping") {
         post("/applyDiscount") {
             val request = call.receive<CampaignRequest>()
-            val response : String = shoppingService.applyDiscount(request)
+            val response : List<CampaignResponse> = shoppingService.applyDiscount(request)
             call.respond(status = HttpStatusCode.OK, response)
         }
-
 
     }
 }
