@@ -1,6 +1,8 @@
 package com.aselsan.com.aselsan.service
+import com.aselsan.com.aselsan.domain.campaign.BundleMultiBuyCampaign
 import com.aselsan.com.aselsan.domain.campaign.Campaign
 import com.aselsan.com.aselsan.domain.campaign.DateBasedDiscountCampaign
+import com.aselsan.com.aselsan.domain.campaign.FirstPurchaseOfferCampaign
 import com.aselsan.com.aselsan.domain.campaign.FixedAmountDiscountCampaign
 import com.aselsan.com.aselsan.domain.campaign.PercentageDiscountCampaign
 import com.aselsan.com.aselsan.repository.ShoppingRepository
@@ -31,7 +33,9 @@ class ShoppingService(private val shoppingRepository: ShoppingRepository) {
                 DayOfWeek.THURSDAY to DateBasedDiscountCampaign.Promotion(ProductCategoryType.CLOTHING, 0.05),
             ),
             sampleDay = DayOfWeek.MONDAY
-        )
+        ),
+        FirstPurchaseOfferCampaign(),
+        BundleMultiBuyCampaign()
     )
 
     fun applyDiscount(request: CampaignRequest): List<CampaignResponse> {
