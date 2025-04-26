@@ -1,5 +1,4 @@
 package com.aselsan
-
 import io.ktor.server.application.*
 
 fun main(args: Array<String>) {
