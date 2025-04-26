@@ -9,7 +9,7 @@ import io.ktor.server.routing.route
 
 fun Route.customerRoutes(customerService: CustomerService) {
     route("/customers") {
-        get("/") {
+        get("") {
             val customers = customerService.getAllCustomers()
             call.respond(HttpStatusCode.OK, customers)
         }
