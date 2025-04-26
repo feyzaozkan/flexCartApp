@@ -1,4 +1,4 @@
-package com.aselsan.com.aselsan.domain.customer
+package com.aselsan.domain.customer
 import java.util.UUID
 import java.util.Date
 

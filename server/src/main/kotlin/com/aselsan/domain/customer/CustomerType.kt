@@ -1,4 +1,4 @@
-package com.aselsan.com.aselsan.domain.customer
+package com.aselsan.domain.customer
 
 enum class CustomerType {
     PREMIUM,
