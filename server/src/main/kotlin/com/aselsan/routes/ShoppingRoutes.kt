@@ -17,7 +17,7 @@ fun Route.shoppingRoutes(shoppingService: ShoppingService) {
     route("/shopping") {
         post("/applyDiscount") {
             val request = call.receive<CampaignRequest>()
-            val response : List<CampaignResponse> = shoppingService.applyDiscount(request)
+            val response : CampaignResponse = shoppingService.applyDiscount(request)
             call.respond(status = HttpStatusCode.OK, response)
         }
 

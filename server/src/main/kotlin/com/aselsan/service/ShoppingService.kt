@@ -6,6 +6,8 @@ import com.aselsan.com.aselsan.domain.campaign.FirstPurchaseOfferCampaign
 import com.aselsan.com.aselsan.domain.campaign.FixedAmountDiscountCampaign
 import com.aselsan.com.aselsan.domain.campaign.PercentageDiscountCampaign
 import com.aselsan.com.aselsan.repository.ShoppingRepository
+import com.aselsan.domain.customer.CustomerType
+import com.aselsan.domain.model.CampaignDetails
 import com.aselsan.domain.model.CampaignRequest
 import com.aselsan.domain.product.ProductCategoryType
 import com.aselsan.domain.model.CampaignResponse
@@ -38,19 +40,28 @@ class ShoppingService(private val shoppingRepository: ShoppingRepository) {
         BundleMultiBuyCampaign()
     )
 
-    fun applyDiscount(request: CampaignRequest): List<CampaignResponse> {
+
+    fun applyDiscount(request: CampaignRequest): CampaignResponse {
         val shoppingCart = shoppingRepository.getShoppingCart(request)
 
         val campaignResults = campaigns.map { campaign ->
             if (campaign.isApplicable(shoppingCart)) {
                 val discount = campaign.calculateDiscount(shoppingCart)
-                CampaignResponse(campaign.name, discount)
+                CampaignDetails(campaign.name, discount)
             } else {
-                CampaignResponse(campaign.name, 0.0)
+                CampaignDetails(campaign.name, 0.0)
             }
         }
 
-        return campaignResults.sortedByDescending { it.discount }
+
+        val sortedCampaigns = campaignResults.sortedByDescending { it.discount }
+
+        val isFree : Boolean = ((shoppingCart.total - sortedCampaigns[0].discount) >= 1000.0) ||( shoppingCart.customer.type == CustomerType.PREMIUM)
+
+        val shippingFee = if (isFree) 0.0 else 25.0
+
+        return CampaignResponse(campaignDetails = sortedCampaigns, shippingFee = shippingFee)
+
     }
 
 }
