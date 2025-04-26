@@ -32,4 +32,10 @@ object CustomerRepository {
 
         return customers.find { it.id == uuidId }
     }
+    fun addSpentToCustomer(customerId: String, amount: Double): Boolean {
+        val customer = customerById(customerId) ?: return false
+        customer.addSpent(amount)
+        return true
+    }
+
 }
