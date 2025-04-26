@@ -17,6 +17,9 @@ object CustomerRepository {
         customers.add(
             Customer(UUID.randomUUID(), "Charlie", now, 1000.0, 200.0, CustomerType.STANDARD)
         )
+        customers.add(
+            Customer(UUID.randomUUID(), "Feyza", now, 0.0, 0.0, CustomerType.NEW)
+        )
     }
 
     fun allCustomers(): List<Customer> = customers

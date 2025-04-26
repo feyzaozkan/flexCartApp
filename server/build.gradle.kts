@@ -29,7 +29,8 @@ dependencies {
     implementation(libs.ktor.server.netty)
     implementation(libs.logback.classic)
     implementation(libs.ktor.server.config.yaml)
-    implementation("com.jsoizo:kotlin-csv-jvm:1.10.0") // for JVM platform
+    implementation("com.jsoizo:kotlin-csv-jvm:1.10.0")
+    implementation("io.ktor:ktor-server-cors:3.1.2") // for JVM platform
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
 }
