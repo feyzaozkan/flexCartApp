@@ -1,5 +1,7 @@
 package com.aselsan
 
+import com.aselsan.com.aselsan.repository.ShoppingRepository
+import com.aselsan.com.aselsan.service.ShoppingService
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -11,6 +13,7 @@ import io.ktor.server.routing.*
 
 import com.aselsan.routes.customerRoutes
 import com.aselsan.routes.productRoutes
+import com.aselsan.routes.shoppingRoutes
 import com.aselsan.service.CustomerService
 import com.aselsan.service.ProductService
 
@@ -27,6 +30,7 @@ fun Application.configureRouting() {
         }
         customerRoutes(CustomerService())
         productRoutes(ProductService())
+        shoppingRoutes(ShoppingService(ShoppingRepository()))
 
     }
 }
