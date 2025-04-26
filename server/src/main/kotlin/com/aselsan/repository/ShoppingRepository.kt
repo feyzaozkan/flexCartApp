@@ -18,8 +18,6 @@ class ShoppingRepository {
         }
 
         val shoppingCart = ShoppingCart(customer!!, cartItems)
-
-
         return shoppingCart
     }
 

@@ -7,9 +7,14 @@ class Customer(
     val id: UUID,
     val name: String,
     val registeredAt: Date,
-    val totalSpent: Double,
+    var totalSpent: Double,
     val lastYearSpent: Double,
     val type: CustomerType
 )
 {
+    fun addSpent(amount: Double) {
+        if (amount > 0) {
+            totalSpent += amount
+        }
+    }
 }

@@ -11,6 +11,8 @@ import com.aselsan.domain.model.CampaignDetails
 import com.aselsan.domain.model.CampaignRequest
 import com.aselsan.domain.product.ProductCategoryType
 import com.aselsan.domain.model.CampaignResponse
+import com.aselsan.domain.model.CompletePaymentRequest
+import com.aselsan.repository.CustomerRepository
 import java.time.DayOfWeek
 
 class ShoppingService(private val shoppingRepository: ShoppingRepository) {
@@ -53,7 +55,6 @@ class ShoppingService(private val shoppingRepository: ShoppingRepository) {
             }
         }
 
-
         val sortedCampaigns = campaignResults.sortedByDescending { it.discount }
 
         val isFree : Boolean = ((shoppingCart.total - sortedCampaigns[0].discount) >= 1000.0) ||( shoppingCart.customer.type == CustomerType.PREMIUM)
@@ -61,7 +62,9 @@ class ShoppingService(private val shoppingRepository: ShoppingRepository) {
         val shippingFee = if (isFree) 0.0 else 25.0
 
         return CampaignResponse(campaignDetails = sortedCampaigns, shippingFee = shippingFee)
-
     }
 
+    fun completePayment(request: CompletePaymentRequest) : Boolean {
+        return CustomerRepository.addSpentToCustomer(customerId = request.customerId, amount = request.amountToPay)
+    }
 }
