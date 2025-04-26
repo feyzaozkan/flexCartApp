@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Box, Container, Avatar, Grid, Stack, Typography } from "@mui/material";
-import SimpleDialog from "./components/SimpleDialog";
+import UserDialog from "./components/UserDialog.tsx";
 
 function App() {
   const emails = ['username@gmail.com', 'user02@gmail.com'];
@@ -17,7 +17,7 @@ function App() {
               <Box className="flex flex-row justify-between">
                 <Avatar>MA</Avatar>
                 <Button variant="contained">Change User</Button>
-                <SimpleDialog
+                <UserDialog
                   selectedValue={selectedValue}
                   open={open}
                   onClose={handleClose}
