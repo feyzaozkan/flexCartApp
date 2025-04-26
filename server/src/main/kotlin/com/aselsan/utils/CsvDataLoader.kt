@@ -1,4 +1,4 @@
-package com.aselsan.com.aselsan.utils
+package com.aselsan.utils
 
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 
