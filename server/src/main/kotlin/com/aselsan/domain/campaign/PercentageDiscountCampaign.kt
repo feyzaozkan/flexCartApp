@@ -6,7 +6,7 @@ import com.aselsan.domain.product.ProductCategoryType
 
 class PercentageDiscountCampaign(
     private val eligibleCategories: Map<ProductCategoryType, Double>, // Category -> Discount Rate
-    private val minCartValue: Double,
+    private val minCartValue: Double = 2500.0,
 ) : Campaign {
 
     override val name = "Percentage Discount"
