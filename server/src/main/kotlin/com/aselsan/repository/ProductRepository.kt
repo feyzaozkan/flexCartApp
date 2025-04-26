@@ -21,4 +21,20 @@ object ProductRepository {
     }
 
     fun getAll(): List<Product> = products
+
+
+
+    fun productById(id: String): Product? {
+        val uuidId = UUID.fromString(id)
+        /*
+        val uuidId = try {
+            UUID.fromString(id)
+        } catch (e: IllegalArgumentException) {
+            return null
+        }
+        */
+
+        return products.find { it.id == uuidId }
+    }
+
 }
