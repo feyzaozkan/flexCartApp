@@ -17,6 +17,13 @@ function MainPage() {
     const [customers, setCustomers] = useState([]);
     const [products, setProducts] = React.useState<Product[]>([]);
 
+    const white = "#fbf5ef";
+    const yellow = "#f2d3ab";
+    const brown = "#c69fa5";
+    const pink = "#8b6d9c";
+    const purple = "#494d7e";
+    const darkest = "#272744";
+
     const fetchCustomers = async () => {
         try {
             const response = await api.get("/customers"); // 👉 example endpoint
@@ -135,12 +142,12 @@ function MainPage() {
     return (
         <Box className="h-screen w-screen">
             <Box className="flex flex-row justify-between w-full h-full">
-                <Box className="bg-blue-300 flex-2 w-full">
+                <Box className="bg-[#272744] flex-2 w-full">
                     <Container>
-                        <Box className="mt-10">
+                        <Box className="mt-10 ">
                             <Box className="flex flex-row justify-between">
-                                <Avatar>{selectedUser?.name[0]}</Avatar>
-                                <Button variant="contained" onClick={() => setOpenUserDialog(true)}>Change User</Button>
+                                <Avatar sx={{ bgcolor: brown }}>{selectedUser?.name[0]}</Avatar>
+                                <Button variant="contained" style={{backgroundColor: pink, color: white}} onClick={() => setOpenUserDialog(true)}>Change User</Button>
                                 <UserDialog
                                     open={openUserDialog}
                                     users={customers}
@@ -148,44 +155,44 @@ function MainPage() {
                                     onSelect={handleSelect}
                                 />
                             </Box>
-                            <Box className="mt-10">
+                            <Box className="mt-10 bg-[#8b6d9c] p-4 rounded-lg">
                                 <Stack spacing={2}>
                                     <Box className="flex flex-row gap-20">
-                                        <Typography className="flex-4">ID:</Typography>
-                                        <Typography className="flex-8">{selectedUser?.id}</Typography>
+                                        <Typography className="flex-4 text-[#fbf5ef]">ID:</Typography>
+                                        <Typography className="flex-8 text-[#fbf5ef]">{selectedUser?.id}</Typography>
                                     </Box>
                                     <Box className="flex flex-row gap-20">
-                                        <Typography className="flex-4">Name:</Typography>
-                                        <Typography className="flex-8">{selectedUser?.name}</Typography>
+                                        <Typography className="flex-4 text-[#fbf5ef]">Name:</Typography>
+                                        <Typography className="flex-8 text-[#fbf5ef]">{selectedUser?.name}</Typography>
                                     </Box>
                                     <Box className="flex flex-row gap-20">
-                                        <Typography className="flex-4">Type:</Typography>
-                                        <Typography className="flex-8">{selectedUser?.type}</Typography>
+                                        <Typography className="flex-4 text-[#fbf5ef]">Type:</Typography>
+                                        <Typography className="flex-8 text-[#fbf5ef]">{selectedUser?.type}</Typography>
                                     </Box>
                                     <Box className="flex flex-row gap-20">
-                                        <Typography className="flex-4">Last year spent:</Typography>
-                                        <Typography className="flex-8">{selectedUser?.lastYearSpent}</Typography>
+                                        <Typography className="flex-4 text-[#fbf5ef]">Last year spent:</Typography>
+                                        <Typography className="flex-8 text-[#fbf5ef]">{selectedUser?.lastYearSpent}</Typography>
                                     </Box>
                                     <Box className="flex flex-row gap-20">
-                                        <Typography className="flex-4">Registered At:</Typography>
-                                        <Typography className="flex-8">{selectedUser?.registeredAt}</Typography>
+                                        <Typography className="flex-4 text-[#fbf5ef]">Registered At:</Typography>
+                                        <Typography className="flex-8 text-[#fbf5ef]">{selectedUser?.registeredAt}</Typography>
                                     </Box>
                                     <Box className="flex flex-row gap-20">
-                                        <Typography className="flex-4">Total Spent:</Typography>
-                                        <Typography className="flex-8">{selectedUser?.totalSpent}</Typography>
+                                        <Typography className="flex-4 text-[#fbf5ef]">Total Spent:</Typography>
+                                        <Typography className="flex-8 text-[#fbf5ef]">{selectedUser?.totalSpent}</Typography>
                                     </Box>
                                 </Stack>
                             </Box>
                         </Box>
                     </Container>
                 </Box>
-                <Box className="bg-red-300 flex-4">
+                <Box className="bg-[#494d7e] flex-4">
                     <Container>
-                        <Box className="mt-10 text-center">
-                            <Typography variant="h3">
+                        <Box className="mt-10 text-center bg-[#272744] p-2 rounded-lg mb-5">
+                            <Typography variant="h3" className="text-[#fbf5ef]">
                                 FlexCart
                             </Typography>
-                            <Typography variant="h6">
+                            <Typography variant="h6" className="text-[#fbf5ef]">
                                 Flexible Discount and Shopping Cart Engine
                             </Typography>
                         </Box>
@@ -194,16 +201,16 @@ function MainPage() {
                         </Box>
                     </Container>
                 </Box>
-                <Box className="bg-green-300 flex-2">
+                <Box className="bg-[#272744] flex-2">
                     <Container className="flex flex-col justify-between h-full">
                         <Box className="mt-10 flex justify-center">
-                            <Typography variant="h5" className="mb-4 text-center">Cart</Typography>
+                            <Typography variant="h5" className="mb-4 text-center text-[#fbf5ef] bg-[#494d7e] p-2 rounded-lg">Cart</Typography>
                         </Box>
                         <Box className="flex">
                             <CartList items={cartItems} onRemoveItem={handleRemoveItem} />
                         </Box>
                         <Box className="text-center flex mb-10">
-                            <Button variant="contained" disabled={isCartEmpty || !selectedUser} className="w-full justify-end" onClick={handlePay}>Pay</Button>
+                            <Button variant="contained" disabled={isCartEmpty || !selectedUser} className="w-full justify-end" onClick={handlePay} style={{backgroundColor: pink, color: white}}>Pay</Button>
                         </Box>
                     </Container>
                 </Box>

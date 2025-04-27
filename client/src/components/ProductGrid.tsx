@@ -15,9 +15,9 @@ interface ProductGridProps {
 
 const ProductGrid: React.FC<ProductGridProps> = ({ products, onAddToCart }) => {
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-1 overflow-auto max-h-[80vh]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-1 overflow-auto max-h-[80vh] rounded-lg">
             {products.map((product) => (
-                <Card key={product.id} className="flex flex-col justify-between">
+                <Card key={product.id} className="flex flex-col justify-between" style={{backgroundColor: "#f2d3ab"}}>
                     <CardContent>
                         <Typography variant="h6" component="div">
                             {product.name}
@@ -31,6 +31,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, onAddToCart }) => {
                     </CardContent>
                     <CardActions>
                         <Button
+                            style={{backgroundColor: "#8b6d9c", color: "#fbf5ef"}}
                             size="small"
                             variant="contained"
                             fullWidth

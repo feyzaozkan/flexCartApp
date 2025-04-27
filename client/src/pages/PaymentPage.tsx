@@ -52,17 +52,17 @@ const PaymentPage: React.FC = () => {
     return (
         <Box className="h-screen w-screen">
             <Box className="flex flex-row justify-between w-full h-full">
-                <Box className="bg-red-300 flex-6 w-full">
+                <Box className="bg-[#494d7e] flex-6 w-full">
                     <Container>
                         <Box className="mt-10 flex flex-col gap-10">
                             <Box className="flex flex-col">
                                 <Box>
-                                    <Button variant="outlined" onClick={handleBack}>
+                                    <Button variant="outlined" style={{color: "#fbf5ef"}} onClick={handleBack}>
                                         Back
                                     </Button>
                                 </Box>
                                 <Box className="text-center">
-                                    <Typography variant="h4" gutterBottom>
+                                    <Typography variant="h4"className="text-[#f2d3ab]" gutterBottom>
                                         Payment Page
                                     </Typography>
                                 </Box>
@@ -87,26 +87,26 @@ const PaymentPage: React.FC = () => {
                                     <Divider />
 
                                     <div className="flex justify-between items-center p-2">
-                                        <Typography variant="h6">Total:</Typography>
-                                        <Typography variant="h6">
+                                        <Typography variant="h6" className="text-[#fbf5ef] bg-[#272744] p-2 rounded-lg">Total:</Typography>
+                                        <Typography variant="h6" className="text-[#fbf5ef] bg-[#272744] p-2 rounded-lg">
                                             ${totalPrice.toFixed(2)}
                                         </Typography>
                                     </div>
                                     <div className="flex justify-between items-center p-2">
-                                        <Typography variant="h6">Discount Amount:</Typography>
-                                        <Typography variant="h6">
+                                        <Typography variant="h6" className="text-[#fbf5ef] bg-[#272744] p-2 rounded-lg">Discount Amount:</Typography>
+                                        <Typography variant="h6" className="text-[#f2d3ab] bg-[#272744] p-2 rounded-lg">
                                             -${discountAmount.toFixed(2)}
                                         </Typography>
                                     </div>
                                     <div className="flex justify-between items-center p-2">
-                                        <Typography variant="h6">Amount to Pay:</Typography>
-                                        <Typography variant="h6">
+                                        <Typography variant="h6" className="text-[#fbf5ef] bg-[#272744] p-2 rounded-lg">Amount to Pay:</Typography>
+                                        <Typography variant="h6" className="text-[#fbf5ef] bg-[#272744] p-2 rounded-lg">
                                             ${(totalPrice - discountAmount + freeShipping).toFixed(2)}
                                         </Typography>
                                     </div>
                                     <div className="flex justify-between items-center p-2">
-                                        <Typography variant="h6">Free shipping:</Typography>
-                                        <Typography variant="h6">
+                                        <Typography variant="h6" className="text-[#fbf5ef] bg-[#272744] p-2 rounded-lg">Free shipping:</Typography>
+                                        <Typography variant="h6" className="text-[#fbf5ef] bg-[#272744] p-2 rounded-lg">
                                             {freeShipping === 0 ? "No" : "Yes"}
                                         </Typography>
                                     </div>
@@ -114,23 +114,23 @@ const PaymentPage: React.FC = () => {
                             </Box>
 
                             <Box className="flex mb-10 justify-center">
-                                <Button variant="contained" className="max-w-lg justify-end" onClick={handleCompletePayment}>Complete Payment</Button>
+                                <Button variant="contained" className="max-w-lg justify-end" onClick={handleCompletePayment} style={{backgroundColor: "#f2d3ab", color: "#272744"}}>Complete Payment</Button>
                             </Box>
                         </Box>
                     </Container>
                 </Box>
-                <Box className="bg-blue-300 flex-6 w-full">
+                <Box className="bg-[#494d7e] flex-6 w-full">
                     <Container>
-                        <Box className="mt-10 flex flex-col gap-10">
+                        <Box className="mt-10 flex flex-col gap-10 text-[#fbf5ef] bg-[#272744] p-2 rounded-lg">
                             <Box className="flex items-center p-2 gap-10">
                                 <Typography variant="h6">Applied Discount:</Typography>
-                                <Typography variant="h6">
+                                <Typography variant="h6" className="text-[#f2d3ab]">
                                     {appliedDiscount}
                                 </Typography>
                             </Box>
                             <Box className="flex flex-col p-2 gap-10">
                                 <Typography variant="h6" className="mb-10">Other Eligible Discounts</Typography>
-                                <Stack spacing={2} className="w-full max-w-md">
+                                <Stack spacing={2} className="w-full max-w-md text-[#c69fa5]">
                                     {validDiscounts.map((discount: { id: React.Key | null; name: string; }) => (
                                         <Typography key={discount.id}>{discount.name}</Typography>
                                     ))}
