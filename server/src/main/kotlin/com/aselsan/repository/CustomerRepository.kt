@@ -2,23 +2,31 @@ package com.aselsan.repository
 
 import com.aselsan.domain.customer.Customer
 import com.aselsan.domain.customer.CustomerType
+import com.aselsan.utils.CsvDataLoader
+import java.text.SimpleDateFormat
 import java.util.*
 
 object CustomerRepository {
     private val customers = mutableListOf<Customer>()
     init {
-        val now = Date()
-        customers.add(
-            Customer(UUID.randomUUID(), "Alice", now, 6000.0, 5500.0, CustomerType.PREMIUM)
-        )
-        customers.add(
-            Customer(UUID.randomUUID(), "Bob", now, 300.0, 100.0, CustomerType.NEW)
-        )
-        customers.add(
-            Customer(UUID.randomUUID(), "Charlie", now, 1000.0, 200.0, CustomerType.STANDARD)
-        )
-        customers.add(
-            Customer(UUID.randomUUID(), "Feyza", now, 0.0, 0.0, CustomerType.NEW)
+        val loader = CsvDataLoader()
+
+        // Path to the CSV file (relative to the classpath)
+        val filePath = "/customers.csv"
+
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+
+        customers.addAll(
+            loader.load(filePath) { row ->
+                Customer(
+                    id = UUID.fromString(row["id"] ?: ""),
+                    name = row["name"] ?: "",
+                    registeredAt = row["registeredAt"]?.let { dateFormat.parse(it) } ?: Date(),
+                    totalSpent = row["totalSpent"]?.toDoubleOrNull() ?: 0.0,
+                    lastYearSpent = row["lastYearSpent"]?.toDoubleOrNull() ?: 0.0,
+                    type = CustomerType.valueOf(row["type"] ?: "NEW")
+                )
+            }
         )
     }
 

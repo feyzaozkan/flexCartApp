@@ -1,0 +1,5 @@
+id,name,registeredAt,totalSpent,lastYearSpent,type
+7c0896a1-2ae3-407a-b255-8c50e8d99022,Feyza,2025-04-17,0.0,0.0,NEW
+c7882b51-39b9-4f67-809f-56deb771da5a,Alice,2022-06-15,6000.0,5500.0,PREMIUM
+d924725f-c64a-4f76-a013-3e2fdea0db21,Bob,2025-04-11,300.0,0.0,NEW
+b1326ce0-737a-47c3-92b0-d1bcb8b39209,Charlie,2023-02-05,1000.0,200.0,STANDARD

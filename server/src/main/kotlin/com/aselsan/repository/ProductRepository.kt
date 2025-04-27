@@ -9,7 +9,7 @@ object ProductRepository {
 
     init {
         val loader = CsvDataLoader()
-        val filePath = "/Users/otisvaliant/IdeaProjects/flexCartApp/server/src/main/kotlin/com/aselsan/data/products.csv"
+        val filePath = "/products.csv"
         products = loader.load(filePath) { row ->
             Product(
                 id = UUID.fromString(row["id"]),
