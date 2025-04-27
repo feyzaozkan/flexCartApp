@@ -20,12 +20,16 @@ class ShoppingService(private val shoppingRepository: ShoppingRepository) {
     private val campaigns: List<Campaign> = listOf(
         PercentageDiscountCampaign(
             eligibleCategories = mapOf(
-                ProductCategoryType.ELECTRONICS to 0.1,
-                ProductCategoryType.CLOTHING to 0.15
+                ProductCategoryType.ELECTRONICS to 0.15,
+                ProductCategoryType.CLOTHING to 0.15,
+                ProductCategoryType.BOOKS to 0.15,
+                ProductCategoryType.HOME_LIVING to 0.1,
+                ProductCategoryType.COSMETICS to 0.1,
+                ProductCategoryType.TOYS to 0.1,
             )
         ),
         FixedAmountDiscountCampaign(
-            eligibleCategories = setOf(ProductCategoryType.ELECTRONICS, ProductCategoryType.CLOTHING),
+            eligibleCategories = setOf(ProductCategoryType.BOOKS, ProductCategoryType.TOYS),
             minCartValue = 500.0,
             discountAmount = 100.0
         ),
