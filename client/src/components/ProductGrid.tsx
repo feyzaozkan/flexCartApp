@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, Typography, CardActions, Button } from "@mui/material";
 
 interface Product {
-    id: number;
+    id: string;
     name: string;
     price: number;
     category: string;

@@ -3,7 +3,7 @@ import { Stack, Typography, Paper, IconButton, Divider } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 
 interface CartItem {
-    id: number;
+    id: string;
     name: string;
     quantity: number;
     price: number;
@@ -11,7 +11,7 @@ interface CartItem {
 
 interface CartListProps {
     items: CartItem[];
-    onRemoveItem: (id: number) => void;
+    onRemoveItem: (id: string) => void;
 }
 
 const CartList: React.FC<CartListProps> = ({ items, onRemoveItem }) => {

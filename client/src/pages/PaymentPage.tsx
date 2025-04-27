@@ -9,7 +9,18 @@ interface CartItem {
     price: number;
 }
 
+interface User {
+    id: string;
+    name: string;
+    lastYearSpent: number;
+    registeredAt: string;
+    totalSpent: number;
+    type: string;
+}
+
 interface LocationState {
+    discount: any;
+    selectedUser: User;
     cartItems: CartItem[];
 }
 
@@ -18,12 +29,17 @@ const PaymentPage: React.FC = () => {
     const navigate = useNavigate();
     const state = location.state as LocationState;
 
+    const selectedUser = state?.selectedUser || null;
     const cartItems = state?.cartItems || [];
+    const discount = state?.discount || {};
+
+    console.log("discount:", discount);
 
     const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-    const discountAmount = 10;
-    const freeShipping = false;
-    const appliedDiscount = "Multi-buy discount";
+    const discountAmount = discount.campaignDetails[0]?.discount || 0;
+    const freeShipping = discount.shippingFee;
+    const appliedDiscount = discount.campaignDetails[0]?.discount === 0 ? "No" : discount.campaignDetails[0]?.name;
+    const validDiscounts = discount.campaignDetails.filter((campaign: { discount: number; }) => campaign.discount > 0).slice(1);
 
     const handleBack = () => {
         navigate(-1);
@@ -85,13 +101,13 @@ const PaymentPage: React.FC = () => {
                                     <div className="flex justify-between items-center p-2">
                                         <Typography variant="h6">Amount to Pay:</Typography>
                                         <Typography variant="h6">
-                                            ${(totalPrice - discountAmount).toFixed(2)}
+                                            ${(totalPrice - discountAmount + freeShipping).toFixed(2)}
                                         </Typography>
                                     </div>
                                     <div className="flex justify-between items-center p-2">
                                         <Typography variant="h6">Free shipping:</Typography>
                                         <Typography variant="h6">
-                                            {freeShipping ? "Yes" : "No"}
+                                            {freeShipping === 0 ? "No" : "Yes"}
                                         </Typography>
                                     </div>
                                 </Stack>
@@ -115,9 +131,9 @@ const PaymentPage: React.FC = () => {
                             <Box className="flex flex-col p-2 gap-10">
                                 <Typography variant="h6" className="mb-10">Other Eligible Discounts</Typography>
                                 <Stack spacing={2} className="w-full max-w-md">
-                                    <Typography className="">discount 1</Typography>
-                                    <Typography>discount 2</Typography>
-                                    <Typography>discount 3</Typography>
+                                    {validDiscounts.map((discount: { id: React.Key | null; name: string; }) => (
+                                        <Typography key={discount.id}>{discount.name}</Typography>
+                                    ))}
                                 </Stack>
                             </Box>
                         </Box>

@@ -5,6 +5,7 @@ import UserDialog from "../components/UserDialog";
 import ProductGrid from "../components/ProductGrid";
 import CartList from "../components/CartList";
 import api from "../api/axios";
+import axios from "axios";
 
 
 function MainPage() {
@@ -44,14 +45,14 @@ function MainPage() {
     // ];
 
     interface Product {
-        id: number;
+        id: string;
         name: string;
         price: number;
         category: string;
     }
 
     interface CartItem {
-        id: number;
+        id: string;
         name: string;
         quantity: number;
         price: number;
@@ -94,15 +95,35 @@ function MainPage() {
         });
     };
 
-    const handleRemoveItem = (id: number) => {
+    const handleRemoveItem = (id: string) => {
         setCartItems((prevCart) => prevCart.filter((item) => item.id !== id));
     };
 
-    const handlePay = () => {
-        if (!isCartEmpty) {
-            navigate("/payment", { state: { cartItems } });
+    const handlePay = async () => {
+        if (!selectedUser || cartItems.length === 0) return;
+
+        const requestBody = {
+            customerId: selectedUser.id,
+            items: cartItems.map(item => ({
+                productId: item.id,    // Assuming your CartItem has an 'id' field
+                quantity: item.quantity
+            }))
+        };
+
+        try {
+            const response = await axios.post("http://localhost:8080/shopping/applyDiscount", requestBody);
+
+            const discount = response.data;
+
+            // After successful payment logic
+            navigate("/payment", { state: { cartItems, selectedUser, discount } });
+
+        } catch (error) {
+            console.error("Failed to apply discount:", error);
+            alert("Payment failed. Please try again.");
         }
     };
+
 
     const isCartEmpty = cartItems.length === 0;
 
@@ -182,7 +203,7 @@ function MainPage() {
                             <CartList items={cartItems} onRemoveItem={handleRemoveItem} />
                         </Box>
                         <Box className="text-center flex mb-10">
-                            <Button variant="contained" disabled={isCartEmpty} className="w-full justify-end" onClick={handlePay}>Pay</Button>
+                            <Button variant="contained" disabled={isCartEmpty || !selectedUser} className="w-full justify-end" onClick={handlePay}>Pay</Button>
                         </Box>
                     </Container>
                 </Box>
