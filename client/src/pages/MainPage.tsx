@@ -1,27 +1,53 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Box, Container, Avatar, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import UserDialog from "../components/UserDialog";
 import ProductGrid from "../components/ProductGrid";
 import CartList from "../components/CartList";
+import api from "../api/axios";
 
 
 function MainPage() {
     const [openUserDialog, setOpenUserDialog] = React.useState(false);
-    const [selectedUser, setSelectedUser] = React.useState<string | null>(null);
+    const [selectedUser, setSelectedUser] = React.useState<User | null>(null);
     const [cartItems, setCartItems] = React.useState<CartItem[]>([]);
     const navigate = useNavigate();
 
-    const users = [
-        { id: 1, name: "Alice" },
-        { id: 2, name: "Bob" },
-        { id: 3, name: "Charlie" },
-    ];
+    const [customers, setCustomers] = useState([]);
+    const [products, setProducts] = React.useState<Product[]>([]);
+
+    const fetchCustomers = async () => {
+        try {
+            const response = await api.get("/customers"); // 👉 example endpoint
+            // console.log(response.data); // your products
+            setCustomers(response.data);
+        } catch (error) {
+            console.error("Failed to fetch products:", error);
+        }
+    };
+
+    const fetchProducts = async () => {
+        try {
+            const response = await api.get("/products"); // 👉 example endpoint
+            // console.log(response.data); // your products
+            setProducts(response.data);
+        } catch (error) {
+            console.error("Failed to fetch products:", error);
+        }
+    };
+
+
+    // const users = [
+    //   { id: 1, name: "Alice" },
+    //   { id: 2, name: "Bob" },
+    //   { id: 3, name: "Charlie" },
+    // ];
 
     interface Product {
         id: number;
         name: string;
         price: number;
+        category: string;
     }
 
     interface CartItem {
@@ -31,15 +57,24 @@ function MainPage() {
         price: number;
     }
 
-    const products: Product[] = [
-        { id: 1, name: "Cool Shirt", price: 29.99 },
-        { id: 2, name: "Sneakers", price: 59.99 },
-        { id: 3, name: "Backpack", price: 45.00 },
-        { id: 4, name: "Sunglasses", price: 19.99 },
-    ];
+    interface User {
+        id: string;
+        name: string;
+        lastYearSpent: number;
+        registeredAt: string;
+        totalSpent: number;
+        type: string;
+    }
 
-    const handleSelect = (user: { id: number; name: string }) => {
-        setSelectedUser(user.name);
+    // const products: Product[] = [
+    //   { id: 1, name: "Cool Shirt", price: 29.99 },
+    //   { id: 2, name: "Sneakers", price: 59.99 },
+    //   { id: 3, name: "Backpack", price: 45.00 },
+    //   { id: 4, name: "Sunglasses", price: 19.99 },
+    // ];
+
+    const handleSelect = (user: User) => {
+        setSelectedUser(user);
         setOpenUserDialog(false);
     };
 
@@ -71,6 +106,11 @@ function MainPage() {
 
     const isCartEmpty = cartItems.length === 0;
 
+    useEffect(() => {
+        fetchCustomers();
+        fetchProducts();
+    }, []);
+
     return (
         <Box className="h-screen w-screen">
             <Box className="flex flex-row justify-between w-full h-full">
@@ -78,16 +118,11 @@ function MainPage() {
                     <Container>
                         <Box className="mt-10">
                             <Box className="flex flex-row justify-between">
-                                <Avatar>MA</Avatar>
-                                {selectedUser && (
-                                    <Typography variant="h6">
-                                        Selected User: {selectedUser}
-                                    </Typography>
-                                )}
+                                <Avatar>{selectedUser?.name[0]}</Avatar>
                                 <Button variant="contained" onClick={() => setOpenUserDialog(true)}>Change User</Button>
                                 <UserDialog
                                     open={openUserDialog}
-                                    users={users}
+                                    users={customers}
                                     onClose={() => setOpenUserDialog(false)}
                                     onSelect={handleSelect}
                                 />
@@ -96,15 +131,27 @@ function MainPage() {
                                 <Stack spacing={2}>
                                     <Box className="flex flex-row gap-20">
                                         <Typography className="flex-4">ID:</Typography>
-                                        <Typography className="flex-8">MHMT</Typography>
+                                        <Typography className="flex-8">{selectedUser?.id}</Typography>
                                     </Box>
                                     <Box className="flex flex-row gap-20">
                                         <Typography className="flex-4">Name:</Typography>
-                                        <Typography className="flex-8">Mahmut</Typography>
+                                        <Typography className="flex-8">{selectedUser?.name}</Typography>
                                     </Box>
                                     <Box className="flex flex-row gap-20">
                                         <Typography className="flex-4">Type:</Typography>
-                                        <Typography className="flex-8">Premium</Typography>
+                                        <Typography className="flex-8">{selectedUser?.type}</Typography>
+                                    </Box>
+                                    <Box className="flex flex-row gap-20">
+                                        <Typography className="flex-4">Last year spent:</Typography>
+                                        <Typography className="flex-8">{selectedUser?.lastYearSpent}</Typography>
+                                    </Box>
+                                    <Box className="flex flex-row gap-20">
+                                        <Typography className="flex-4">Registered At:</Typography>
+                                        <Typography className="flex-8">{selectedUser?.registeredAt}</Typography>
+                                    </Box>
+                                    <Box className="flex flex-row gap-20">
+                                        <Typography className="flex-4">Total Spent:</Typography>
+                                        <Typography className="flex-8">{selectedUser?.totalSpent}</Typography>
                                     </Box>
                                 </Stack>
                             </Box>
