@@ -141,7 +141,7 @@ function MainPage() {
     }, []);
 
     return (
-        <Box className="h-screen w-screen">
+        <Box className="min-h-screen w-screen bg-[#494d7e] overflow-y-auto">
             <Box className="flex flex-row justify-between w-full h-full">
                 <Box className="bg-[#272744] flex-2 w-full">
                     <Container>
