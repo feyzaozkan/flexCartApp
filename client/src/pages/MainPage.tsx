@@ -6,6 +6,7 @@ import ProductGrid from "../components/ProductGrid";
 import CartList from "../components/CartList";
 import api from "../api/axios";
 import axios from "axios";
+import { ToastContainer } from "react-toastify";
 
 
 function MainPage() {
