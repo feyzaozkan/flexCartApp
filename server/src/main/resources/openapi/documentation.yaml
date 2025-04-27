@@ -1,23 +1,323 @@
-openapi: "3.0.3"
+openapi: "3.1.0"
 info:
-  title: "Application API"
-  description: "Application API"
+  title: "Flex Cart API"
+  description: "API for managing shopping carts, applying campaigns, and processing payments."
   version: "1.0.0"
-servers:
-  - url: "http://0.0.0.0:8080"
 paths:
-  /:
+  /customers:
     get:
-      description: "Hello World!"
+      summary: "Get all customers"
+      description: "Retrieve a list of all registered customers."
+      operationId: "getAllCustomers"
+      tags:
+        - "Customers"
       responses:
         "200":
-          description: "OK"
+          description: "List of customers successfully retrieved."
           content:
-            text/plain:
+            application/json:
               schema:
-                type: "string"
+                type: array
+                items:
+                  $ref: "#/components/schemas/CustomerResponse"
               examples:
-                Example#1:
-                  value: "Hello World!"
+                example-1:
+                  value:
+                    - id: "123e4567-e89b-12d3-a456-426614174000"
+                      name: "Alice"
+                      registeredAt: "Wed Jun 15 00:00:00 TRT 2022"
+                      totalSpent: 6000.0
+                      lastYearSpent: 5500.0
+                      type: "PREMIUM"
+                    - id: "223e4567-e89b-12d3-a456-426614174111"
+                      name: "Bob"
+                      registeredAt: "Fri Apr 11 00:00:00 TRT 2025"
+                      totalSpent: 300.0
+                      lastYearSpent: 100.0
+                      type: "NEW"
+
+  /customers/{id}:
+    get:
+      summary: "Get customer by ID"
+      description: "Retrieve detailed information about a specific customer by their unique ID."
+      operationId: "getCustomerById"
+      tags:
+        - "Customers"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: "UUID of the customer to retrieve."
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: "Customer details successfully retrieved."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerResponse"
+              examples:
+                example-1:
+                  value:
+                    id: "123e4567-e89b-12d3-a456-426614174000"
+                    name: "Alice"
+                    registeredAt: "2024-01-01T12:00:00Z"
+                    totalSpent: 6000.0
+                    lastYearSpent: 5500.0
+                    type: "PREMIUM"
+        "400":
+          description: "Bad Request - Missing or invalid customer ID."
+        "404":
+          description: "Not Found - No customer found with the given ID."
+
+  /products:
+    get:
+      summary: "Get all products"
+      description: "Retrieve a list of all available products in the system."
+      operationId: "getAllProducts"
+      tags:
+        - "Products"
+      responses:
+        "200":
+          description: "List of products successfully retrieved."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProductResponse"
+              examples:
+                example-1:
+                  value:
+                    - id: "prod-001"
+                      name: "Wireless Headphones"
+                      category: "ELECTRONICS"
+                      price: 99.99
+                    - id: "prod-002"
+                      name: "The Great Gatsby"
+                      category: "BOOKS"
+                      price: 15.50
+        "500":
+          description: "Internal Server Error - Failed to retrieve products."
+
+  /shopping/applyDiscount:
+    post:
+      summary: "Apply Discount Campaigns"
+      description: "Applies eligible discount campaigns based on the items in the customer's cart and their customer type. Returns a list of all campaigns with their respective discount amounts. The first campaign detail in the response body is applied to the customer."
+      operationId: "applyDiscount"
+      tags:
+        - "Shopping"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CampaignRequest"
+            examples:
+              example-1:
+                value:
+                  customerId: "7c0896a1-2ae3-407a-b255-8c50e8d99022"
+                  items:
+                    - productId: "a7a51d79-d92f-4142-9a6a-fe9956dff69c"
+                      quantity: 2
+                    - productId: "b0942e1d-b241-44f6-83ff-9d4f225d372d"
+                      quantity: 3
+      responses:
+        "200":
+          description: "Discounts successfully applied."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CampaignResponse"
+              examples:
+                example-1:
+                  value:
+                    campaignDetails:
+                      - name: "First Purchase Campaign"
+                        discount: 92.75
+                      - name: "Bundle-Multi Buy Campaign"
+                        discount: 74.2
+                      - name: "Percentage Discount"
+                        discount: 0.0
+                      - name: "Fixed Amount Discount"
+                        discount: 0.0
+                      - name: "Date-Based Discounts"
+                        discount: 0.0
+                    shippingFee: 25.0
+        "400":
+          description: "Bad Request - Invalid input or missing fields."
+        "500":
+          description: "Internal Server Error - Failed to apply discount."
+
+  /shopping/completePayment:
+    patch:
+      summary: "Complete Payment"
+      description: "Completes the payment after discounts and updates customer total spent value."
+      operationId: "completePayment"
+      tags:
+        - "Shopping"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompletePaymentRequest"
+            examples:
+              example-1:
+                value:
+                  customerId: "123e4567-e89b-12d3-a456-426614174000"
+                  amountToPay: 150.0
+      responses:
+        "200":
+          description: "Payment completed successfully."
+          content:
+            application/json:
+              schema:
+                type: string
+              example: "Payment completed successfully."
+        "400":
+          description: "Bad Request - Payment could not be completed."
+        "500":
+          description: "Internal Server Error - Unexpected error while processing payment."
+
+
 components:
-  schemas: {}
+  schemas:
+    CustomerResponse:
+      type: object
+      required:
+        - id
+        - name
+        - registeredAt
+        - totalSpent
+        - lastYearSpent
+        - type
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        name:
+          type: string
+          example: "John Doe"
+        registeredAt:
+          type: string
+          format: date-time
+          example: "2024-01-01T12:00:00Z"
+        totalSpent:
+          type: number
+          format: double
+          example: 6000.0
+        lastYearSpent:
+          type: number
+          format: double
+          example: 5500.0
+        type:
+          type: string
+          enum:
+            - PREMIUM
+            - NEW
+            - STANDARD
+          example: "PREMIUM"
+
+    ProductResponse:
+      type: object
+      required:
+        - id
+        - name
+        - category
+        - price
+      properties:
+        id:
+          type: string
+          example: "prod-001"
+        name:
+          type: string
+          example: "Wireless Headphones"
+        category:
+          type: string
+          enum:
+            - ELECTRONICS
+            - BOOKS
+            - CLOTHING
+            - HOME_LIVING
+            - COSMETICS
+            - TOYS
+            - OTHERS
+          example: "ELECTRONICS"
+        price:
+          type: number
+          format: double
+          example: 99.99
+
+    CartItemRequest:
+      type: object
+      required:
+        - productId
+        - quantity
+      properties:
+        productId:
+          type: string
+          example: "prod-001"
+        quantity:
+          type: integer
+          example: 2
+
+    CampaignRequest:
+      type: object
+      required:
+        - customerId
+        - items
+      properties:
+        customerId:
+          type: string
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemRequest"
+
+    CampaignDetails:
+      type: object
+      required:
+        - name
+        - discount
+      properties:
+        name:
+          type: string
+          example: "Buy 2 Get 1 Free"
+        discount:
+          type: number
+          format: double
+          example: 20.0
+
+    CampaignResponse:
+      type: object
+      required:
+        - campaignDetails
+        - shippingFee
+      properties:
+        campaignDetails:
+          type: array
+          items:
+            $ref: "#/components/schemas/CampaignDetails"
+        shippingFee:
+          type: number
+          format: double
+          example: 0.0
+
+    CompletePaymentRequest:
+      type: object
+      required:
+        - customerId
+        - amountToPay
+      properties:
+        customerId:
+          type: string
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        amountToPay:
+          type: number
+          format: double
+          example: 150.0

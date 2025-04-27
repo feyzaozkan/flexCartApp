@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class ProductResponseDto(
+data class ProductResponse(
     val id: String,
     val name: String,
     val category: ProductCategoryType,

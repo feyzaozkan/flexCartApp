@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class CustomerResponseDto(
+data class CustomerResponse(
     val id: String,
     val name: String,
     val registeredAt: String,
