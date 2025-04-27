@@ -30,7 +30,10 @@ dependencies {
     implementation(libs.logback.classic)
     implementation(libs.ktor.server.config.yaml)
     implementation("com.jsoizo:kotlin-csv-jvm:1.10.0")
-    implementation("io.ktor:ktor-server-cors:3.1.2") // for JVM platform
+    implementation("io.ktor:ktor-server-cors:3.1.2")
+    implementation("io.ktor:ktor-server-core:3.1.2")
+    implementation("io.ktor:ktor-server-openapi:3.1.2")
+    implementation("io.ktor:ktor-server-swagger:3.1.2")
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
 }
