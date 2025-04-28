@@ -159,6 +159,18 @@ paths:
                       - name: "Date-Based Discounts"
                         discount: 0.0
                     shippingFee: 25.0
+        "400":
+          description: "Invalid quantity"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+              examples:
+                example-1:
+                  value:
+                    success: false
+                    message: "All quantities must be greater than 0."
+
         "404":
           description: "Not Found - No customer or product found with the given ID."
           content:
@@ -170,6 +182,7 @@ paths:
                   value:
                     success: false
                     message: "Product not found with ID: 7c0896a1-2ae3-407a-b255-8c50e8d99022"
+
 
         "500":
           description: "Internal Server Error - Failed to apply discount."

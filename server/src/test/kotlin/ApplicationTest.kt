@@ -1,6 +1,4 @@
 package com.aselsan
-
-import com.aselsan.domain.customer.Customer
 import com.aselsan.domain.model.CampaignDetails
 import com.aselsan.domain.model.CampaignRequest
 import com.aselsan.domain.model.CampaignResponse
@@ -164,6 +162,28 @@ class ApplicationTest {
         applyDiscountAndVerify(requestBody3, expectedResponse3)
     }
 
+
+    @Test
+    fun testApplyDiscountFailure() = testApplication {
+        application { module() }
+
+        val testCases = listOf(
+            // case: customer not found
+            """{ "customerId": "b1326ce0-737a-47c3-92b0-d1bcb8b3920","items": [{ "productId": "966ef3ff-70ee-4f5c-8ecb-8a93d1085668","quantity": 1}] }""" to HttpStatusCode.NotFound,
+
+            // case: zero or negative quantity
+            """{ "customerId": "c7882b51-39b9-4f67-809f-56deb771da5a","items": [{"productId": "966ef3ff-70ee-4f5c-8ecb-8a93d1085668","quantity": -1}]}""" to HttpStatusCode.BadRequest,
+
+        )
+
+        for ((requestBody, expectedStatus) in testCases) {
+            val response = client.post("/shopping/applyDiscount") {
+                contentType(ContentType.Application.Json)
+                setBody(requestBody)
+            }
+            assertEquals(expectedStatus, response.status)
+        }
+    }
 
 
     @Test

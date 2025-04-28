@@ -6,7 +6,6 @@ import com.aselsan.domain.model.CampaignResponse
 import com.aselsan.domain.model.CompletePaymentRequest
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.plugins.BadRequestException
-import io.ktor.server.request.ContentTransformationException
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
@@ -20,6 +19,13 @@ fun Route.shoppingRoutes(shoppingService: ShoppingService) {
         post("/applyDiscount") {
             try {
                 val request = call.receive<CampaignRequest>()
+                if (request.items.any { it.quantity <= 0 }) {
+                    call.respond(
+                        HttpStatusCode.BadRequest,
+                        GenericResponse(success = false, message = "All quantities must be greater than 0.")
+                    )
+                    return@post
+                }
                 val response : CampaignResponse = shoppingService.applyDiscount(request)
                 call.respond(status = HttpStatusCode.OK, response)
             }
