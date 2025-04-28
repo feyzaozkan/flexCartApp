@@ -10,14 +10,16 @@ class ShoppingRepository {
 
     fun getShoppingCart(request: CampaignRequest): ShoppingCart {
 
-        val customer  = CustomerRepository.customerById(request.customerId)
+        val customer  = CustomerRepository.customerById(request.customerId) ?: throw IllegalArgumentException("Customer not found with ID: ${request.customerId}")
+
+
 
         val cartItems: List<CartItem> = request.items.map { item ->
-            val product = ProductRepository.productById(item.productId)
-            CartItem(product!!, item.quantity)
+            val product = ProductRepository.productById(item.productId)?: throw IllegalArgumentException("Product not found with ID: ${item.productId}")
+            CartItem(product, item.quantity)
         }
 
-        val shoppingCart = ShoppingCart(customer!!, cartItems)
+        val shoppingCart = ShoppingCart(customer, cartItems)
         return shoppingCart
     }
 

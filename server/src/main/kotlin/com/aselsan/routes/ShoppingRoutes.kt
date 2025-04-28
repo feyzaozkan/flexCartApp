@@ -18,9 +18,23 @@ import io.ktor.server.routing.route
 fun Route.shoppingRoutes(shoppingService: ShoppingService) {
     route("/shopping") {
         post("/applyDiscount") {
-            val request = call.receive<CampaignRequest>()
-            val response : CampaignResponse = shoppingService.applyDiscount(request)
-            call.respond(status = HttpStatusCode.OK, response)
+            try {
+                val request = call.receive<CampaignRequest>()
+                val response : CampaignResponse = shoppingService.applyDiscount(request)
+                call.respond(status = HttpStatusCode.OK, response)
+            }
+            catch (e: IllegalArgumentException) {
+                call.respond(
+                    HttpStatusCode.NotFound,
+                    GenericResponse(success = false, message = e.message ?: "Invalid request")
+                )
+            }
+            catch (e: Exception) {
+                call.respond(HttpStatusCode.InternalServerError,
+                    GenericResponse(success = false, message = "An unexpected error occurred."
+                    ))
+            }
+
         }
 
         patch("/completePayment") {
